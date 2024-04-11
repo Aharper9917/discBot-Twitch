@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 const data = new SlashCommandBuilder()
-  .setName('live')
+  .setName('live-notifications')
   .setDescription(`Modify what Twitch users you'll get live notifications for.`)
   .addSubcommand(subcommand =>
 		subcommand
