@@ -47,6 +47,7 @@ const execute = async (interaction) => {
       break;
   
     default:
+      await interaction.reply('Not implemented!');
       break;
   }
 }
