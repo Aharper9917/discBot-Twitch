@@ -14,6 +14,11 @@ const data = {
       id: 'discord-user-id',
       label: 'Discord User Id:',
       style: TextInputStyle.Short
+    },
+    {
+      id: 'discord-channel-id',
+      label: 'Discord Channel Id:',
+      style: TextInputStyle.Short
     }
   ],
 }
@@ -28,7 +33,8 @@ module.exports = {
   
     const url = interaction.fields.getTextInputValue('twitch-url');
     const userId = interaction.fields.getTextInputValue('discord-user-id');
-    console.log({ url, userId });
+    const channelId = interaction.fields.getTextInputValue('discord-channel-id');
+    console.log({ url, userId, channelId });
   
     await interaction.reply({ content: 'Your submission was received successfully!', ephemeral: true });
   }
