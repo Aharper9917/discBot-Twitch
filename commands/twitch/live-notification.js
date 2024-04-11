@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 const data = new SlashCommandBuilder()
-  .setName('live-notifications')
+  .setName('live-notification')
   .setDescription(`Modify what Twitch users you'll get live notifications for.`)
   .addSubcommand(subcommand =>
 		subcommand
@@ -32,8 +32,6 @@ const data = new SlashCommandBuilder()
       .setDescription('List live notifications.')
     )
 
-
-
 const execute = async (interaction) => {
   const command = interaction.options.getSubcommand();
 
@@ -43,7 +41,7 @@ const execute = async (interaction) => {
       await modal.show(interaction);      
       break;
     case 'add':
-      await interaction.reply(`Successfully added!\n\n${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.options.getChannel('channel')}`)
+      await interaction.reply(`Successfully added!\n\n${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.options.getChannel('channel')}\n${interaction.options.getString('url')}`)
       break;
   
     default:
