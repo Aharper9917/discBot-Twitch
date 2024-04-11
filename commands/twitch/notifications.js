@@ -6,7 +6,7 @@ const data = new SlashCommandBuilder()
 
 const execute = async (interaction) => {
   const modal = require('@modals/twitch-notifications');
-  await modal.onShow(interaction);
+  await modal.show(interaction);
 }
 
 module.exports = {

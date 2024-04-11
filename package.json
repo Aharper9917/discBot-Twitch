@@ -26,6 +26,7 @@
     "@src": ".",
     "@modals": "modals",
     "@commands": "commands",
-    "@events": "events"
+    "@events": "events",
+    "@utils": "utils"
   }
 }

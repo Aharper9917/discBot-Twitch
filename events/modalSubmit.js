@@ -1,13 +1,12 @@
-const { Events, Collection } = require('discord.js');
+const { Events } = require('discord.js');
 
 const execute = async (interaction) => {
 	if (!interaction.isModalSubmit()) return; 
-  // console.log(interaction)
 
   try {
     const modal = require(`@modals/${interaction.customId}`);
     
-    await modal.onSubmit(interaction)
+    await modal.submit(interaction)
   }
   catch (error) {
     console.error(error);
