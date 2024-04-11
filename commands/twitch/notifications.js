@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 const data = new SlashCommandBuilder()
   .setName('notifications')
@@ -15,6 +15,21 @@ const data = new SlashCommandBuilder()
       .addStringOption(option => option.setName('url').setDescription(`The User's Twitch URL`))
       .addUserOption(option => option.setName('user').setDescription('The Discord User'))
       .addChannelOption(option => option.setName('channel').setDescription('The channel you want to get notified in.'))
+    )
+  .addSubcommand(subcommand => 
+    subcommand
+      .setName('remove')
+      .setDescription('Remove a live notifications.')
+    )
+  .addSubcommand(subcommand => 
+    subcommand
+      .setName('toggle')
+      .setDescription('Toggle a live notifications.')
+    )
+  .addSubcommand(subcommand => 
+    subcommand
+      .setName('list')
+      .setDescription('List live notifications.')
     )
 
 
