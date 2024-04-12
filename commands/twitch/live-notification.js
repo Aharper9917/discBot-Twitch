@@ -14,7 +14,7 @@ const data = new SlashCommandBuilder()
       .setDescription('Add a new Twitch live notification')
       .addStringOption(option => option.setName('url').setDescription(`The User's Twitch URL`))
       .addUserOption(option => option.setName('user').setDescription('The Discord User'))
-      .addChannelOption(option => option
+      .addChannelOption(option => option // TODO Remove with db change
         .setName('channel')
         .setDescription('The channel you want to get notified in.')
         .addChannelTypes(ChannelType.GuildText)
@@ -39,7 +39,8 @@ const data = new SlashCommandBuilder()
 
 const add = async (interaction) => {
   await interaction.deferReply({ephemeral: true})
-  // Validate Twitch.com URL submitted
+  // TODO: Validate Twitch.com URL submitted\
+  // TODO: get channel name from DB
   interaction.editReply(`Successfully added!\n\n${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.options.getChannel('channel')}\n${interaction.options.getString('url')}`)
 }
 
