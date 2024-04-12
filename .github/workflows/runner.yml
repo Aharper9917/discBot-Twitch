@@ -15,6 +15,7 @@ jobs:
       - name: Run Container
         run: docker compose up -d --build
         env:
+          NODE_ENV: production
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           DISCORD_CLIENTID: ${{ secrets.DISCORD_CLIENTID }}
 

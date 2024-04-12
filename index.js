@@ -1,5 +1,4 @@
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
-// require('dotenv').config()
 console.log(process.env)
 require('module-alias/register')
 const fs = require('node:fs');
@@ -45,4 +44,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN);
