@@ -6,7 +6,7 @@ services:
     volumes:
       - $HOME/mybot-data:/app/data
     env_file:
-      - path: ./.env.production
+      - path: ./.env
         required: true
     environment:
       - DISCORD_TOKEN
