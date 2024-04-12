@@ -21,7 +21,7 @@
   },
   "nodemonConfig": {
     "events": {
-      "start": "echo '--------------------\n'& clear || cls"
+      "start": "echo '---------------------\n'& clear || cls"
     }
   },
   "_moduleAliases": {
