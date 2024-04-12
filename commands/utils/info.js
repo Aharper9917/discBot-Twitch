@@ -17,11 +17,19 @@ const data = new SlashCommandBuilder()
 
 
 const user = async (interaction) => {
+  await interaction.deferReply({ephemeral: true})
+
   const target = interaction.options.getUser('target') ?? interaction.user;
   console.log(target)
 
-  await interaction.reply(`User: \`${target.username}\`\nID: \`${target.id}\`\nBot: \`${target.bot.toString()}\``);
+  interaction.editReply(`User: \`${target.username}\`\nID: \`${target.id}\`\nBot: \`${target.bot.toString()}\``);
 }
+
+const server = async (interaction) => {
+  await interaction.deferReply({ephemeral: true})
+  interaction.editReply(`This server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
+}
+
 
 const execute = async (interaction) => {
   const command = interaction.options.getSubcommand();
@@ -31,7 +39,7 @@ const execute = async (interaction) => {
       await user(interaction);
       break;
     case 'server':
-      await interaction.reply(`This server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
+      await server(interaction);
       break;
   }
 }

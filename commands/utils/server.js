@@ -1,7 +1,8 @@
 const { SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
 
 const execute =  async (interaction) => {
-  await interaction.reply(`This server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
+  await interaction.deferReply({ephemeral: true})
+  interaction.editReply(`This server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
 }
 
 module.exports = {

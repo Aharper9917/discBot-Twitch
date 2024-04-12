@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 
 const data = new SlashCommandBuilder()
   .setName('live-notification')
@@ -14,7 +14,11 @@ const data = new SlashCommandBuilder()
       .setDescription('Add a new Twitch live notification')
       .addStringOption(option => option.setName('url').setDescription(`The User's Twitch URL`))
       .addUserOption(option => option.setName('user').setDescription('The Discord User'))
-      .addChannelOption(option => option.setName('channel').setDescription('The channel you want to get notified in.'))
+      .addChannelOption(option => option
+        .setName('channel')
+        .setDescription('The channel you want to get notified in.')
+        .addChannelTypes(ChannelType.GuildText)
+      )
     )
   .addSubcommand(subcommand => 
     subcommand
@@ -32,6 +36,14 @@ const data = new SlashCommandBuilder()
       .setDescription('List live notifications.')
     )
 
+
+const add = async (interaction) => {
+  await interaction.deferReply({ephemeral: true})
+  // Validate Twitch.com URL submitted
+  interaction.editReply(`Successfully added!\n\n${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.options.getChannel('channel')}\n${interaction.options.getString('url')}`)
+}
+
+
 const execute = async (interaction) => {
   const command = interaction.options.getSubcommand();
 
@@ -41,7 +53,7 @@ const execute = async (interaction) => {
       await modal.show(interaction);      
       break;
     case 'add':
-      await interaction.reply(`Successfully added!\n\n${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.options.getChannel('channel')}\n${interaction.options.getString('url')}`)
+      await add(interaction)
       break;
   
     default:
