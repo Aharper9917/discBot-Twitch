@@ -1,7 +1,7 @@
 # TwitchBot
-Discord Bot to allow your server to follow certain Twitch channels and get notified when they go live
+Discord Bot to allow your server to follow certain Twitch channels and get notified when they go live.
 
-## Setup
+## Local Setup
 Populate\
 `.env`
 
@@ -11,7 +11,7 @@ Install\
 Install Dependancies\
 `npm install`
 
-## Run
+## Run Locally
 You can run the project locally with\
 `npm run start`
 
@@ -19,7 +19,7 @@ Update changes to slash commands:\
 `npm run deply-commands`
 
 
-## Deploy
+## Deploy Locally
 Build Docker Image\
 `docker build -t discord-twitch-bot .`
 
@@ -29,6 +29,8 @@ Run Docker Conatiner:\
 List containers:\
 `docker ps`
 
+## Github Actions: CI/CD
+This project uses Github Actions to build the Docker image. Then using a Github Runner the image get pushed to my homelab server.
 
 ## TODO
 - [ ] Add Verification
