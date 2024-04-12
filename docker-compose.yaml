@@ -4,10 +4,6 @@ services:
     build: .
     restart: unless-stopped
     container_name: discord-twitch-bot
-    volumes:
-      - type: bind
-        source: ./data
-        target: /opt/discord-twitch-bot/data
     env_file:
       - path: ./.env.production
         required: true
@@ -15,5 +11,7 @@ services:
       - NODE_ENV
       - DISCORD_TOKEN
       - DISCORD_CLIENTID
+    volumes:
+      - discord-twitch-bot-prod:./data
 volumes:
-  discord-twitch-bot:
+  discord-twitch-bot-prod:
