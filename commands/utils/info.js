@@ -1,8 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 const data = new SlashCommandBuilder()
 	.setName('info')
 	.setDescription('Get info about a user or a server!')
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+  .setDMPermission(false)
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('user')
