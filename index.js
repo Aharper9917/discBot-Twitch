@@ -1,10 +1,8 @@
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
-console.log(process.env)
+require('dotenv').config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env` })
 require('module-alias/register')
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.cooldowns = new Collection();
