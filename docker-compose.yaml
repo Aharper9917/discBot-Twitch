@@ -12,6 +12,6 @@ services:
       - DISCORD_TOKEN
       - DISCORD_CLIENTID
     volumes:
-      - discord-twitch-bot-prod:./data
+      - discord-twitch-bot-prod:/usr/src/bot/data
 volumes:
   discord-twitch-bot-prod:
