@@ -1,8 +1,9 @@
+require('dotenv').config()
 require('module-alias/register')
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json').discord;
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.cooldowns = new Collection();
@@ -42,4 +43,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(token);
+client.login(DISCORD_TOKEN);
