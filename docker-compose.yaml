@@ -2,6 +2,7 @@ version: "3.8"
 services:
   main:
     build: .
+    restart: unless-stopped
     container_name: discord-twitch-bot
     volumes:
       - $HOME/mybot-data:/app/data
