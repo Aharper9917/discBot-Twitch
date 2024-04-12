@@ -5,7 +5,7 @@ RUN mkdir -p /usr/src/bot
 WORKDIR /usr/src/bot
 
 COPY package.json /usr/src/bot
-RUN touch /usr/src/bot/.env
+RUN touch .env
 RUN npm install
 
 COPY . /usr/src/bot
