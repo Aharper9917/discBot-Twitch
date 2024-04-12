@@ -1,8 +1,12 @@
 require('dotenv').config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env` })
 require('module-alias/register')
+require('@utils/deploy-commands')
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { db } = require('@db/database')
+const { sync } = require('@db/sync')
+
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.cooldowns = new Collection();

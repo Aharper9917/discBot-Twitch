@@ -4,7 +4,7 @@ const path = require('node:path');
 
 const commands = [];
 // Grab all the command folders from the commands directory you created earlier
-const foldersPath = path.join(__dirname, 'commands');
+const foldersPath = path.join(__dirname, '../commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
@@ -31,11 +31,20 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-		// The put method is used to fully refresh all commands in the guild with the current set
-		const data = await rest.put(
-			Routes.applicationGuildCommands(process.env.DISCORD_CLIENTID, process.env.DISCORD_GUILDID),
-			{ body: commands },
-		);
+    let data = {}
+    if (process.env.DISCORD_GUILDID) {
+      // The put method is used to fully refresh all commands in the guild with the current set
+      data = await rest.put(
+        Routes.applicationGuildCommands(process.env.DISCORD_CLIENTID, process.env.DISCORD_GUILDID),
+        { body: commands },
+      );
+    }
+    else {
+      data = await rest.put(
+        Routes.applicationCommand(process.env.DISCORD_CLIENTID),
+        { body: commands },
+      );
+    }
 
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {
