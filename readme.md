@@ -31,10 +31,3 @@ List containers:\
 
 ## Github Actions: CI/CD
 This project uses Github Actions to build the Docker image. Then using a Github Runner the image get pushed to my homelab server.
-
-## TODO
-- [ ] Add Verification
-  - [ ] Channel
-  - [ ] Twitch URL
-- [ ] Persistant Storage
-- [ ] Integrate twitch api
