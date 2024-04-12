@@ -9,5 +9,6 @@ services:
       - path: ./.env
         required: true
     environment:
+      - NODE_ENV
       - DISCORD_TOKEN
       - DISCORD_CLIENTID
