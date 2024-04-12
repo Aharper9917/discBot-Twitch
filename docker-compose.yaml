@@ -4,7 +4,10 @@ services:
     build: .
     container_name: discord-twitch-bot
     volumes:
-      - /home/exenifix/mybot-data:/app/data
+      - $HOME/mybot-data:/app/data
+    env_file:
+      - path: ./.env
+        required: true # default
     environment:
       - DISCORD_TOKEN
       - DISCORD_CLIENTID
