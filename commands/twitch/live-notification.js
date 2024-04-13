@@ -1,4 +1,6 @@
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const Guild = require('@db/models/guild');
+const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@utils/url')
 
 const data = new SlashCommandBuilder()
   .setName('live-notification')
@@ -14,11 +16,6 @@ const data = new SlashCommandBuilder()
       .setDescription('Add a new Twitch live notification')
       .addStringOption(option => option.setName('url').setDescription(`The User's Twitch URL`))
       .addUserOption(option => option.setName('user').setDescription('The Discord User'))
-      .addChannelOption(option => option // TODO Remove with db change
-        .setName('channel')
-        .setDescription('The channel you want to get notified in.')
-        .addChannelTypes(ChannelType.GuildText)
-      )
     )
   .addSubcommand(subcommand => 
     subcommand
@@ -36,14 +33,28 @@ const data = new SlashCommandBuilder()
       .setDescription('List live notifications.')
     )
 
-
 const add = async (interaction) => {
-  await interaction.deferReply({ephemeral: true})
-  // TODO: Validate Twitch.com URL submitted\
-  // TODO: get channel name from DB
-  interaction.editReply(`Successfully added!\n\n${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.options.getChannel('channel')}\n${interaction.options.getString('url')}`)
+  try {
+    await interaction.deferReply({ephemeral: true})
+    const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: interaction.guild.id } })
+    if (dbCreated) { await dbGuild.update({ notificationChannelId: interaction.guild.systemChannelId }) }  
+  
+    await dbGuild.createNotification({
+      twitchUrl: interaction.options.getString('url'),
+      twitchUsername: await getTwitchUsernameFromUrl(interaction.options.getString('url')),
+      discordUserId: interaction.options.getUser('user').id
+    })
+  
+    interaction.editReply(
+      `Successfully added!\n\n` +
+      `${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.guild.channels.cache.get(dbGuild.notificationChannelId)}\n` +
+      `${interaction.options.getString('url')}`
+    )
+  } catch (error) {
+    console.error(error)
+    interaction.editReply(error.message)
+  }
 }
-
 
 const execute = async (interaction) => {
   const command = interaction.options.getSubcommand();

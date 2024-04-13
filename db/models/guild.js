@@ -8,7 +8,7 @@ const Guild = db.define('guild', {
   },
   notificationChannelId: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   }
 })
 

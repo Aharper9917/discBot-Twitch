@@ -1,15 +1,11 @@
 const Sequelize = require('sequelize')
 const db = require('@db/database.js')
-const Guild = require('@db/models/guild')
-
 
 const Notification = db.define('notification', {
   id: {
-    type: Sequelize.STRING,
-    primaryKey: true
-  },
-  guidlId: {
-    type: Sequelize.STRING,
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    allowNull: false,
     primaryKey: true
   },
   twitchUrl: {
@@ -22,10 +18,8 @@ const Notification = db.define('notification', {
   },
   discordUserId: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   }
 })
-
-Notification.hasOne(Guild)
 
 module.exports = Notification
