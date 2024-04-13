@@ -8,7 +8,9 @@
     "start": "nodemon ./index.js",
     "deply-commands": "node ./utils/deploy-commands.js",
     "db:sync": "node syncdb.js",
-    "db:sync:force": "node syncdb.js force"
+    "db:sync:alter": "node syncdb.js alter",
+    "db:sync:force": "node syncdb.js force",
+    "db:sync:alter:force": "node syncdb.js alter force"
   },
   "author": "",
   "license": "ISC",
