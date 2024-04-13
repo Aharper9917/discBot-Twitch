@@ -7,9 +7,11 @@ WORKDIR /usr/src/bot
 COPY package.json /usr/src/bot
 RUN touch .env
 RUN npm install
-RUN node syncdb.js
 
 COPY . /usr/src/bot
+RUN npm run db:sync:force
+# RUN npm run db:sync
+# RUN node syncdb.js
 
 # Start the bot.
 CMD ["node", "index.js"]
