@@ -7,6 +7,7 @@ WORKDIR /usr/src/bot
 COPY package.json /usr/src/bot
 RUN touch .env
 RUN npm install
+RUN npm run db:sync:force
 
 COPY . /usr/src/bot
 
