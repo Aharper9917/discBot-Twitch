@@ -5,8 +5,8 @@ const execute = async (guild) => {
   console.log("Left a guild: " + guild.name);
   
   // Remove from Guild DB table
-  const dbGuild = await Guild.findByPk(guild.id)
-  await dbGuild.destroy()
+  // const dbGuild = await Guild.findByPk(guild.id)
+  // await dbGuild.destroy()
 }
 
 module.exports = {
