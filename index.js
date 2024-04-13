@@ -1,11 +1,10 @@
 require('dotenv').config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env` })
 require('module-alias/register')
-
+require('@db/database')
+require('@db/relations')
+require('@utils/deploy-commands')
 const fs = require('node:fs');
 const path = require('node:path');
-const { db } = require('@db/database')
-const { sync } = require('@db/sync')
-require('@utils/deploy-commands')
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 
 

@@ -19,7 +19,13 @@ const Notification = db.define('notification', {
   discordUserId: {
     type: Sequelize.STRING,
     allowNull: true
+  },
+  active: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true,
+    allowNull: false
   }
+  // guildId from Notification.belongsTo(Guild)
 })
 
 module.exports = Notification

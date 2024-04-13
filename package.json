@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./index.js",
-    "deply-commands": "node ./utils/deploy-commands.js"
+    "deply-commands": "node ./utils/deploy-commands.js",
+    "db:sync": "node syncdb.js"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +33,7 @@
     "@commands": "commands",
     "@events": "events",
     "@db": "db",
-    "@utils": "utils"
+    "@utils": "utils",
+    "@errors": "errors"
   }
 }
