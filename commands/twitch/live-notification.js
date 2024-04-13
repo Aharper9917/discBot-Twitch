@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const Guild = require('@db/models/guild');
-const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@utils/url')
+const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@utils/url');
+const BotError = require('@errors/BotError');
 
 const data = new SlashCommandBuilder()
   .setName('live-notification')
@@ -37,8 +38,9 @@ const add = async (interaction) => {
   try {
     await interaction.deferReply({ephemeral: true})
     const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: interaction.guild.id } })
-    if (dbCreated) { await dbGuild.update({ notificationChannelId: interaction.guild.systemChannelId }) }  
-  
+    if (dbCreated) await dbGuild.update({ notificationChannelId: interaction.guild.systemChannelId })
+    if (!isValidTwitchUrl(interaction.options.getString('url'))) throw new BotError(`Not a valid Twitch Url`)
+
     await dbGuild.createNotification({
       twitchUrl: interaction.options.getString('url'),
       twitchUsername: await getTwitchUsernameFromUrl(interaction.options.getString('url')),
@@ -52,9 +54,11 @@ const add = async (interaction) => {
     )
   } catch (error) {
     console.error(error)
-    interaction.editReply(error.message)
+    interaction.editReply(error.botMessage)
   }
 }
+
+const remove = async (interaction) => {}
 
 const execute = async (interaction) => {
   const command = interaction.options.getSubcommand();
