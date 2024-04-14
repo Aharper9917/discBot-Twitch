@@ -1,5 +1,5 @@
 const { TextInputStyle } = require('discord.js');
-const modalBuilder = require('modalBuilder.js')
+const modalBuilder = require('./modalBuilder.js')
 
 const data = {
   id: 'twitch-notifications',
