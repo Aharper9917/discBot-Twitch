@@ -1,3 +1,4 @@
+require('module-alias/register')
 require('dotenv').config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env` })
 const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
