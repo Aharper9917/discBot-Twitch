@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./index.js",
-    "deply-commands": "node ./utils/deploy-commands.js",
+    "commands:deploy": "node ./utils/deploy-commands.js",
     "db:sync": "node syncdb.js",
     "db:sync:alter": "node syncdb.js alter",
     "db:sync:force": "node syncdb.js force",
