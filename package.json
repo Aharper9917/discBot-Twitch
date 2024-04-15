@@ -37,6 +37,7 @@
     "@events": "events",
     "@db": "db",
     "@utils": "utils",
-    "@errors": "errors"
+    "@errors": "errors",
+    "@discord-bot": "src/discord-bot"
   }
 }

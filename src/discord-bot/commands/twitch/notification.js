@@ -9,7 +9,7 @@ const {
 } = require('discord.js');
 const Guild = require('@db/models/guild');
 const Notification = require('@db/models/notification');
-const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@utils/url');
+const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@discord-bot/utils/url');
 const BotError = require('@errors/BotError');
 
 const data = new SlashCommandBuilder()
