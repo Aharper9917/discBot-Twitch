@@ -13,7 +13,7 @@ const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@utils/url');
 const BotError = require('@errors/BotError');
 
 const data = new SlashCommandBuilder()
-  .setName('live-notification')
+  .setName('notification')
   .setDescription(`Modify what Twitch users you'll get live notifications for.`)
   // .addSubcommand(subcommand =>
 	// 	subcommand
@@ -75,7 +75,7 @@ const modifyNotification = async (interaction) => {
     let selection
     
     if (dbNotifs.length === 0) {
-      resContent.content = resContent.content + "### There are no Twitch Live Notifications.\nUse: `/live-notification add`"
+      resContent.content = resContent.content + "### There are no Twitch Live Notifications.\nUse: `/notification add`"
     }
     else {
       resContent.content = resContent.content + "### Twitch Live Notifications:\n"
