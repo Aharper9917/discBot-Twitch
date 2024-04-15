@@ -40,11 +40,17 @@ const addNotification = async (interaction) => {
     if (dbCreated) await dbGuild.update({ notificationChannelId: interaction.guild.systemChannelId })
     if (!isValidTwitchUrl(interaction.options.getString('url'))) throw new BotError(`Not a valid Twitch Url`)
 
-    await dbGuild.createNotification({
-      twitchUrl: interaction.options.getString('url'),
-      twitchUsername: await getTwitchUsernameFromUrl(interaction.options.getString('url')),
-      discordUserId: interaction.options.getUser('user').id
-    })
+    const twitchUrl = interaction.options.getString('url')
+    const twitchUsername = await getTwitchUsernameFromUrl(interaction.options.getString('url'))
+    const discordUserId = interaction.options.getUser('user').id
+    
+    // Validate record doesn't already exist
+    if (Notification.findOne({ where: { twitchUrl }}).length !== 0) {
+      throw new BotError(`Twitch Live Notification [${twitchUsername}](${twitchUrl}) already exists`)
+    }
+
+    // Create notif in DB
+    await dbGuild.createNotification({ twitchUrl, twitchUsername, discordUserId })
   
     await interaction.editReply(
       `Successfully added!\n\n` +
@@ -52,7 +58,6 @@ const addNotification = async (interaction) => {
       `${interaction.options.getString('url')}`
     )
   } catch (error) {
-    console.error(error)
     interaction.editReply(error.botMessage ? error.botMessage : "Unexpected error occured.")
   }
 }

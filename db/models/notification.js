@@ -10,11 +10,13 @@ const Notification = db.define('notification', {
   },
   twitchUrl: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   twitchUsername: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   discordUserId: {
     type: Sequelize.STRING,
