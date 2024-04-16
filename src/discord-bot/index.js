@@ -1,4 +1,3 @@
-// console.log("==================== Discord Bot ====================")
 require('./utils/deploy-commands')
 const fs = require('node:fs');
 const path = require('node:path');

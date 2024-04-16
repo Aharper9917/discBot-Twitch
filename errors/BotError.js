@@ -6,4 +6,6 @@ class BotError extends Error {
   }
 }
 
-module.exports = BotError
+module.exports = {
+  BotError
+}
