@@ -18,6 +18,10 @@ jobs:
           NODE_ENV: production
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           DISCORD_CLIENTID: ${{ secrets.DISCORD_CLIENTID }}
+          TWITCH_CLIENTSECRET: ${{ secrets.TWITCH_CLIENTSECRET }}
+          TWITCH_CLIENTID: ${{ secrets.TWITCH_CLIENTID }}
+          TWITCH_SESSION_SECRET: ${{ secrets.TWITCH_SESSION_SECRET }}
+          TWITCH_CALLBACK_URL: ${{ secrets.TWITCH_CALLBACK_URL }}
 
       - name: Cleanup Unused Images
         run: docker image prune -f
