@@ -4,19 +4,24 @@ require('module-alias/register')
 require('@db/database')
 require('@db/relations')
 
+// ==================================== Twitch API ====================================
+const { TwitchAPI } = require('@twitch-api')
+const initTwitchApi = async () => {
+  const twitchApi = new TwitchAPI(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET)
+  await twitchApi.setToken()
+  // await twitchApi.subscribe('supnexus11')
+  // await twitchApi.listSubscriptions()
+  // await twitchApi.deleteSubscription('e628d8ea-6923-4370-91d6-27554e2ec8ba')
+  // await twitchApi.listSubscriptions()
+}
+
 // ==================================== Discord Bot ====================================
+const { DiscordBot } = require('@discord-bot')
+
 const StartDiscordBot = () => {
-  const { DiscordBot } = require('@discord-bot')
   const bot = new DiscordBot()
   bot.start()
 }
-
-// ==================================== Twitch API ====================================
-const { TwitchAPI } = require('@twitch-api')
-const twitchApi = new TwitchAPI(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET)
-twitchApi.setToken()
-// console.log('twitchApi.token', twitchApi.token)
-
 
 // ==================================== EVENT SUB ====================================
 const {
@@ -38,8 +43,10 @@ const app = express();
 const port = 8080;
 
 app.listen(port, () => {
-  console.log('============== EventSub Express Server ==============')
-  console.log(`Listening at http://localhost:${port}\n`);
+  // console.log('============== EventSub Express Server ==============')
+  console.log(`Listening at http://localhost:${port}`);
+
+  initTwitchApi()
   StartDiscordBot()
 })
 
