@@ -10,6 +10,7 @@ const execute = async (interaction) => {
   }
   catch (error) {
     console.error(error);
+    
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({ content: 'There was an error while submitting your form!', ephemeral: true });
     } else {

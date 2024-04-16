@@ -28,7 +28,7 @@ const getTwitchUsernameFromUrl = (str) => {
 
     return url.pathname.split('/')[1]
   } catch (error) {
-    return error
+    console.log(error)
   }
 }
 
