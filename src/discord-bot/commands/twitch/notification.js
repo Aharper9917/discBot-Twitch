@@ -47,20 +47,21 @@ const addNotification = async (interaction) => {
     const discordUserId = interaction.options.getUser('user').id
     
     // Validate record doesn't already exist
-    if (Notification.findOne({ where: { twitchUrl }}).length !== 0) {
+    if (await Notification.findOne({ where: { twitchUrl } }) !== null) {
       throw new BotError(`Twitch Live Notification [${twitchUsername}](${twitchUrl}) already exists`)
     }
 
     // Create notif in DB
     await dbGuild.createNotification({ twitchUrl, twitchUsername, discordUserId })
     await twitch.subscribe(twitchUsername)
-  
+
     await interaction.editReply(
       `Successfully added!\n\n` +
       `${interaction.options.getUser('user')}'s Twitch Live notifications will appear in ${interaction.guild.channels.cache.get(dbGuild.notificationChannelId)}\n` +
       `${interaction.options.getString('url')}`
     )
   } catch (error) {
+    !error.botMessage ? console.log(error) : null
     interaction.editReply(error.botMessage ? error.botMessage : "Unexpected error occured.")
   }
 }
@@ -73,6 +74,9 @@ const modifyNotification = async (interaction) => {
   }
   
   try {
+    const subs = await twitch.listSubscriptions()
+    console.log('listSubscriptions:', subs)
+
     // ==================================== Build Initial Dialog ====================================
     const dbNotifs = await Notification.findAll({ where: { guildId: interaction.guild.id } })
     let selection
@@ -143,11 +147,12 @@ const modifyNotification = async (interaction) => {
       let successMsg = `### Successfully ${confirmation.customId === 'delete-btn' ? 'Deleted' : 'Toggled'} ` + 
         `Twitch Live Notification for: [${dbNotif.twitchUsername}](${dbNotif.twitchUrl}) `
 
-      // Unsubscribe from EventSub
-      await twitch.unsubscribe(twitchUsername)
 
       // Update DB
       if (confirmation.customId === 'delete-btn') {
+        // Unsubscribe from EventSub
+        await twitch.unsubscribe(dbNotif.twitchUsername)
+
         await dbNotif.destroy();
       } else if (confirmation.customId === 'toggle-btn') {        
         await dbNotif.update({ active: !dbNotif.active });
