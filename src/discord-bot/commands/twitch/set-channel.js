@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ChannelType, PermissionFlagsBits } = require('discord.js');
+const Guild = require('@db/models/guild');
 
 const data = new SlashCommandBuilder()
   .setName('set-channel')
@@ -12,8 +13,17 @@ const data = new SlashCommandBuilder()
   .setDMPermission(false)
 
 const execute = async (interaction) => {
-  // TODO set guild's notifications channel in DB
-  await interaction.reply('Not implemented!');
+  try {
+    await interaction.deferReply({ephemeral: true})
+  
+    const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: interaction.guild.id } })
+    await dbGuild.update({ notificationChannelId: interaction.options.getChannel('channel').id })
+  
+    await interaction.editReply(`### Twitch Live Notifications will now be posted in ${interaction.options.getChannel('channel')}`);
+  } catch (error) {
+    console.log(error)
+    interaction.editReply(error.botMessage ? error.botMessage : "Unexpected error occured.")
+  }
 }
 
 module.exports = {
