@@ -11,12 +11,12 @@ const initTwitchApi = async () => {
   await twitchApi.setToken()
 
   // Test API calls
-  await twitchApi.subscribe('supnexus11')
-  const subs = await twitchApi.listSubscriptions()
-  for (const sub of subs) {
-    await twitchApi.deleteSubscription(sub.id)
-  }
-  await twitchApi.listSubscriptions()
+  // await twitchApi.subscribe('supnexus11')
+  // const subs = await twitchApi.listSubscriptions()
+  // for (const sub of subs) {
+  //   await twitchApi.deleteSubscription(sub.id)
+  // }
+  // await twitchApi.listSubscriptions()
 }
 
 // ==================================== Discord Bot ====================================
