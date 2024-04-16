@@ -10,7 +10,9 @@ const {
 const Guild = require('@db/models/guild');
 const Notification = require('@db/models/notification');
 const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@discord-bot/utils/url');
-const BotError = require('@errors/BotError');
+const { BotError } = require('@errors/BotError');
+const { TwitchAPI } = require('@twitch-api')
+const twitch = new TwitchAPI()
 
 const data = new SlashCommandBuilder()
   .setName('notification')
@@ -51,6 +53,7 @@ const addNotification = async (interaction) => {
 
     // Create notif in DB
     await dbGuild.createNotification({ twitchUrl, twitchUsername, discordUserId })
+    await twitch.subscribe(twitchUsername)
   
     await interaction.editReply(
       `Successfully added!\n\n` +
@@ -139,6 +142,9 @@ const modifyNotification = async (interaction) => {
       const confirmation = await res.awaitMessageComponent({ time: 60_000 });
       let successMsg = `### Successfully ${confirmation.customId === 'delete-btn' ? 'Deleted' : 'Toggled'} ` + 
         `Twitch Live Notification for: [${dbNotif.twitchUsername}](${dbNotif.twitchUrl}) `
+
+      // Unsubscribe from EventSub
+      await twitch.unsubscribe(twitchUsername)
 
       // Update DB
       if (confirmation.customId === 'delete-btn') {

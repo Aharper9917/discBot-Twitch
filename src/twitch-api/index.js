@@ -1,8 +1,3 @@
-// curl -X POST 'https://api.twitch.tv/helix/eventsub/subscriptions' \
-// -H 'Authorization: Bearer 2gbdx6oar67tqtcmt49t3wpcgycthx' \
-// -H 'Client-Id: wbmytr93xzw8zbg0p1izqyzzc5mbiz' \
-// -H 'Content-Type: application/json' \
-// -d '{"type":"channel.follow","version":"2","condition":{"broadcaster_user_id":"1234", "moderator_user_id": "1234"},"transport":{"method":"webhook","callback":"https://example.com/callback","secret":"s3cre77890ab"}}' 
 
 class TwitchAPI {
   clientId;
@@ -16,7 +11,7 @@ class TwitchAPI {
     expires: 1718131840984 // unix timestamp
   }*/
 
-  constructor(clientId, clientSecret) {
+  constructor(clientId = process.env.TWITCH_CLIENTID, clientSecret = process.env.TWITCH_CLIENTSECRET) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
   }
@@ -48,6 +43,14 @@ class TwitchAPI {
   async subscribe(username) {
     await this.setToken();
     try {
+      const broadcasterId = await this.getBroadcasterId(username)
+      const currentSubs = (await this.listSubscriptions()).filter((sub) => sub.condition.broadcaster_user_id === broadcasterId)
+      if (currentSubs.length > 0) {
+        console.log(`Subscription for ${username} already exists`)
+        return
+      }
+
+      console.log(`Adding Subscription for ${username}`)
       const res = await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
         method: 'POST',
         headers: {
@@ -59,7 +62,7 @@ class TwitchAPI {
           'type': 'stream.online',
           'version': '1',
           'condition': {
-            'broadcaster_user_id': await this.getBroadcasterId(username)
+            'broadcaster_user_id': broadcasterId
           },
           'transport': {
             'method': 'webhook',
@@ -76,28 +79,50 @@ class TwitchAPI {
       }
       
       const data = (await res.json()).data;
-      console.log('data', data)
       return data;
     } catch (error) {
-      // console.log(error)
+      console.log(error)
+    }
+  }
+
+  async unsubscribe(username) {
+    await this.setToken();
+    try {
+      const subs = await this.listSubscriptions()
+
+      for (const sub of subs) {
+        if (sub.condition.broadcaster_user_id === await this.getBroadcasterId(username)) {
+          await this.deleteSubscription(sub.id)
+        }
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
   async deleteSubscription(id) {
+    await this.setToken();
     try {
-      await fetch(`https://api.twitch.tv/helix/eventsub/subscriptions?id=${id}`, {
+      const res = await fetch(`https://api.twitch.tv/helix/eventsub/subscriptions?id=${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': this.authHeader,
           'Client-Id': this.clientId,
         }
       });
+
+      if (!res.ok) {
+        const message = `An error has occured: ${res.status}`;
+        console.log('Error', await res.json())
+        throw new Error(message);
+      }
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   }
 
   async listSubscriptions() {
+    await this.setToken();
     try {
       const res = await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
         headers: {
@@ -112,16 +137,15 @@ class TwitchAPI {
         throw new Error(message);
       }
       const subs = (await res.json()).data;
-      console.log('listSubscriptions:', subs)
+      // console.log('listSubscriptions:', subs)
       return subs;
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   }
   
   async getBroadcasterId(username) {
     await this.setToken();
-
     try {      
       const res = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
@@ -138,7 +162,7 @@ class TwitchAPI {
       const broadcasterId = (await res.json()).data[0].id;
       return broadcasterId;
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   }
 }

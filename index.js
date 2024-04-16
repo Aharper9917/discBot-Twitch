@@ -8,21 +8,22 @@ require('@db/relations')
 const { TwitchAPI } = require('@twitch-api')
 const initTwitchApi = async () => {
   const twitchApi = new TwitchAPI(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET)
-  await twitchApi.setToken()
+  // await twitchApi.setToken()
 
   // Test API calls
   // await twitchApi.subscribe('supnexus11')
-  // const subs = await twitchApi.listSubscriptions()
-  // for (const sub of subs) {
-  //   await twitchApi.deleteSubscription(sub.id)
-  // }
-  // await twitchApi.listSubscriptions()
+  // await twitchApi.subscribe('theprimeagen')
+  // await twitchApi.unsubscribe('supnexus11')
+  // await twitchApi.unsubscribe('theprimeagen')
+  
+  return twitchApi
 }
 
 // ==================================== Discord Bot ====================================
 const { DiscordBot } = require('@discord-bot')
 
-const StartDiscordBot = () => {
+const StartDiscordBot = async () => {
+  await initTwitchApi()
   const bot = new DiscordBot()
   bot.start()
 }
@@ -47,10 +48,7 @@ const app = express();
 const port = 8080;
 
 app.listen(port, () => {
-  // console.log('============== EventSub Express Server ==============')
   console.log(`Listening at http://localhost:${port}`);
-
-  initTwitchApi()
   StartDiscordBot()
 })
 
