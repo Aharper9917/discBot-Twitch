@@ -9,10 +9,13 @@ const { TwitchAPI } = require('@twitch-api')
 const initTwitchApi = async () => {
   const twitchApi = new TwitchAPI(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET)
   await twitchApi.setToken()
-  // await twitchApi.subscribe('supnexus11')
-  // await twitchApi.listSubscriptions()
+  await twitchApi.subscribe('supnexus11')
+  const subs = await twitchApi.listSubscriptions()
   // await twitchApi.deleteSubscription('e628d8ea-6923-4370-91d6-27554e2ec8ba')
-  // await twitchApi.listSubscriptions()
+  for (const sub of subs) {
+    await twitchApi.deleteSubscription(sub.id)
+  }
+  await twitchApi.listSubscriptions()
 }
 
 // ==================================== Discord Bot ====================================
