@@ -1,36 +1,51 @@
+// ==================================== Dependencies ====================================
 require('dotenv').config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env` })
 require('module-alias/register')
 require('@db/database')
 require('@db/relations')
-const { DiscordBot } = require('@discord-bot')
-const crypto = require('crypto')
-const express = require('express');
 
-const bot = new DiscordBot()
+// ==================================== Discord Bot ====================================
+const StartDiscordBot = () => {
+  const { DiscordBot } = require('@discord-bot')
+  const bot = new DiscordBot()
+  bot.start()
+}
+
+// ==================================== Twitch API ====================================
+const { TwitchAPI } = require('@twitch-api')
+const twitchApi = new TwitchAPI(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET)
+twitchApi.setToken()
+// console.log('twitchApi.token', twitchApi.token)
+
+
+// ==================================== EVENT SUB ====================================
+const {
+  TWITCH_MESSAGE_ID,
+  TWITCH_MESSAGE_TIMESTAMP,
+  TWITCH_MESSAGE_SIGNATURE,
+  MESSAGE_TYPE,
+  MESSAGE_TYPE_VERIFICATION,
+  MESSAGE_TYPE_NOTIFICATION,
+  MESSAGE_TYPE_REVOCATION,
+  HMAC_PREFIX,
+  getSecret,
+  getHmacMessage,
+  getHmac,
+  verifyMessage,
+} = require('@twitch-api/eventsub')
+const express = require('express');
 const app = express();
 const port = 8080;
 
-// Start Discord Bot
-bot.start()
-    
-// Notification request headers
-const TWITCH_MESSAGE_ID = 'Twitch-Eventsub-Message-Id'.toLowerCase();
-const TWITCH_MESSAGE_TIMESTAMP = 'Twitch-Eventsub-Message-Timestamp'.toLowerCase();
-const TWITCH_MESSAGE_SIGNATURE = 'Twitch-Eventsub-Message-Signature'.toLowerCase();
-const MESSAGE_TYPE = 'Twitch-Eventsub-Message-Type'.toLowerCase();
+app.listen(port, () => {
+  console.log('============== EventSub Express Server ==============')
+  console.log(`Listening at http://localhost:${port}\n`);
+  StartDiscordBot()
+})
 
-// Notification message types
-const MESSAGE_TYPE_VERIFICATION = 'webhook_callback_verification';
-const MESSAGE_TYPE_NOTIFICATION = 'notification';
-const MESSAGE_TYPE_REVOCATION = 'revocation';
-
-// Prepend this string to the HMAC that's created from the message
-const HMAC_PREFIX = 'sha256=';
-
-app.use(express.raw({          // Need raw message body for signature verification
+app.use(express.raw({
     type: 'application/json'
 }))  
-
 
 app.post('/eventsub', (req, res) => {
     let secret = getSecret();
@@ -38,16 +53,14 @@ app.post('/eventsub', (req, res) => {
     let hmac = HMAC_PREFIX + getHmac(secret, message);  // Signature to compare
 
     if (true === verifyMessage(hmac, req.headers[TWITCH_MESSAGE_SIGNATURE])) {
-        console.log("signatures match");
-
-        // Get JSON object from body, so you can process the message.
+        console.log("EventSub - Signatures Match");
         let notification = JSON.parse(req.body);
         
         if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
             // TODO: Do something with the event's data.
 
-            console.log(`Event type: ${notification.subscription.type}`);
-            console.log(JSON.stringify(notification.event, null, 4));
+            console.log(`EventSub - EventType: ${notification.subscription.type}`);
+            console.log('EventSub - ' + JSON.stringify(notification.event, null, 4));
             
             res.sendStatus(204);
         }
@@ -57,47 +70,19 @@ app.post('/eventsub', (req, res) => {
         else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
             res.sendStatus(204);
 
-            console.log(`${notification.subscription.type} notifications revoked!`);
-            console.log(`reason: ${notification.subscription.status}`);
-            console.log(`condition: ${JSON.stringify(notification.subscription.condition, null, 4)}`);
+            console.log(`EventSub - ${notification.subscription.type} notifications revoked!`);
+            console.log(`EventSub - Reason: ${notification.subscription.status}`);
+            console.log(`EventSub - Condition: ${JSON.stringify(notification.subscription.condition, null, 4)}`);
         }
         else {
             res.sendStatus(204);
-            console.log(`Unknown message type: ${req.headers[MESSAGE_TYPE]}`);
+            console.log(`EventSub - Unknown Message Type: ${req.headers[MESSAGE_TYPE]}`);
         }
     }
-    else {
-        console.log('403');    // Signatures didn't match.
+    else { // Signatures didn't match.
+        console.log('EventSub - 403');
         res.sendStatus(403);
     }
 })
-  
-app.listen(port, () => {
-  console.log(`Express app listening at http://localhost:${port}`);
-})
 
 
-function getSecret() {
-    // TODO: Get secret from secure storage. This is the secret you pass 
-    // when you subscribed to the event.
-    return process.env.TWITCH_CLIENTID;
-}
-
-// Build the message used to get the HMAC.
-function getHmacMessage(request) {
-    return (request.headers[TWITCH_MESSAGE_ID] + 
-        request.headers[TWITCH_MESSAGE_TIMESTAMP] + 
-        request.body);
-}
-
-// Get the HMAC.
-function getHmac(secret, message) {
-    return crypto.createHmac('sha256', secret)
-    .update(message)
-    .digest('hex');
-}
-
-// Verify whether our hash matches the hash that Twitch passed in the header.
-function verifyMessage(hmac, verifySignature) {
-    return crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(verifySignature));
-}

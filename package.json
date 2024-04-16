@@ -39,6 +39,7 @@
     "@db": "db",
     "@utils": "utils",
     "@errors": "errors",
-    "@discord-bot": "src/discord-bot"
+    "@discord-bot": "src/discord-bot",
+    "@twitch-api": "src/twitch-api"
   }
 }
