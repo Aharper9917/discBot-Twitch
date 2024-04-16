@@ -15,8 +15,6 @@ const MESSAGE_TYPE_REVOCATION = 'revocation';
 const HMAC_PREFIX = 'sha256=';
 
 const getSecret = () => {
-  // TODO: Get secret from secure storage. This is the secret you pass 
-  // when you subscribed to the event.
   return process.env.TWITCH_CLIENTID;
 }
 

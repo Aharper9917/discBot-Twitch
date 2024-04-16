@@ -4,7 +4,7 @@ const Guild = require('@db/models/guild');
 const data = new SlashCommandBuilder()
   .setName('set-channel')
   .setDescription('List streams that are Live from your notification list.')
-  .addChannelOption(option => option // TODO Remove with db change
+  .addChannelOption(option => option
     .setName('channel')
     .setDescription('The channel you want to get notified in.')
     .addChannelTypes(ChannelType.GuildText)
