@@ -84,7 +84,7 @@ class TwitchAPI {
     }
   }
 
-  async unsubscribe(username) {
+  async unsubscribe(username, all = false) {
     await this.setToken();
     try {
       const subs = await this.listSubscriptions()
@@ -93,6 +93,13 @@ class TwitchAPI {
         if (sub.condition.broadcaster_user_id === await this.getBroadcasterId(username)) {
           console.log(`Unsubscribing ${username} EventSub`)
           await this.deleteSubscription(sub.id)
+        }
+      }
+
+      if (all) {
+        for (const sub of subs) {
+          try { await this.deleteSubscription(sub.id) }
+          catch (error) { console.log(error) }
         }
       }
     } catch (error) {
