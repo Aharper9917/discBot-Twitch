@@ -5,7 +5,12 @@ const data = new SlashCommandBuilder()
   .setDescription('Replies with Pong!');
 
 const execute = async (interaction) => {
-  await interaction.reply('Bong!');
+  await interaction.deferReply({ephemeral: true})
+
+  await interaction.editReply('Bong!');
+  setTimeout(() => {
+    interaction.editReply('[Bong!](https://tenor.com/view/bing-bong-fuck-yo-life-gif-23922204)');
+  }, 1500);
 }
 
 module.exports = {
