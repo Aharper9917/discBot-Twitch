@@ -6,6 +6,7 @@ const execute =  async (interaction) => {
 }
 
 module.exports = {
+  disabled: true,
 	data: new SlashCommandBuilder()
 		.setName('server')
 		.setDescription('Provides information about the server.')

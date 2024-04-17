@@ -44,4 +44,8 @@ const execute = async (interaction) => {
   }
 }
 
-module.exports = {data, execute}
+module.exports = {
+  disabled: true,
+  data,
+  execute
+}

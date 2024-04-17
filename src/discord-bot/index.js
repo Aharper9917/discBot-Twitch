@@ -22,6 +22,7 @@ class DiscordBot {
       for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
+        if (command.disabled) break;
   
         if ('data' in command && 'execute' in command) {
           client.commands.set(command.data.name, command);
