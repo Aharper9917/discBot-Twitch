@@ -5,7 +5,7 @@ const data = new SlashCommandBuilder()
   .setDescription('Replies with Pong!');
 
 const execute = async (interaction) => {
-  await interaction.deferReply({ephemeral: true})
+  await interaction.deferReply({ephemeral: false})
 
   await interaction.editReply('Bong!');
   setTimeout(() => {
