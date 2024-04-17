@@ -54,22 +54,16 @@ app.post('/eventsub', (req, res) => {
       let notification = JSON.parse(req.body);
 
       if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
-        // TODO: Do something with the event's data.
-        /*
-        {
-          "id": "50897254045",
-          "broadcaster_user_id": "105252332",
-          "broadcaster_user_login": "slaysol",
-          "broadcaster_user_name": "Slaysol",
-          "type": "live",
-          "started_at": "2024-04-17T03:24:58Z"
-        }
-        */
-        discordBot.client.liveEvent = notification.event
-        discordBot.client?.emit('twitch-live-notification', discordBot.client);
-
         console.log(`EventSub - EventType: ${notification.subscription.type}`);
         console.log('EventSub - ' + JSON.stringify(notification.event, null, 4));
+
+        discordBot.client.liveEvent = notification.event
+        if (notification.subscription.type === 'stream.online') {
+          discordBot.client?.emit('twitch-live-online', discordBot.client);
+        }
+        else if (notification.subscription.type === 'stream.offline') {
+          discordBot.client?.emit('twitch-live-offline', discordBot.client);
+        }
 
         res.sendStatus(204);
       }

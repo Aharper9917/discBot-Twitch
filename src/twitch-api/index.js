@@ -20,15 +20,15 @@ class TwitchAPI {
     try {
       if (Date.now() < this.token?.expires) return
       console.log(`Fetching Token...`)
-  
+
       const res = await fetch("https://id.twitch.tv/oauth2/token?" + new URLSearchParams({
         client_id: this.clientId,
         client_secret: this.clientSecret,
         grant_type: 'client_credentials'
       }), { method: "POST" });
-  
+
       if (res.status !== 200) throw new Error(`Coudn't fetch API Token`)
-  
+
       const data = await res.json()
       this.authHeader = 'Bearer ' + data.access_token
       this.token = {
@@ -39,49 +39,48 @@ class TwitchAPI {
       console.log(error)
     }
   }
-  
+
   async subscribe(username) {
     await this.setToken();
-    try {
-      const broadcasterId = await this.getBroadcasterId(username)
-      const currentSubs = (await this.listSubscriptions()).filter((sub) => sub.condition.broadcaster_user_id === broadcasterId)
-      if (currentSubs.length > 0) {
-        console.log(`Subscription for ${username} already exists`)
-        return
-      }
+    const broadcasterId = await this.getBroadcasterId(username)
+    const currentSubs = (await this.listSubscriptions()).filter((sub) => sub.condition.broadcaster_user_id === broadcasterId)
+    if (currentSubs.length > 0) {
+      console.log(`Subscription for ${username} already exists`)
+      return
+    }
 
-      console.log(`Adding Subscription for ${username}`)
-      const res = await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
-        method: 'POST',
-        headers: {
-          'Authorization': this.authHeader,
-          'Client-Id': this.clientId,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          'type': 'stream.online',
-          'version': '1',
-          'condition': {
-            'broadcaster_user_id': broadcasterId
+    console.log(`Adding Subscription for ${username}`)
+    for (const type of ['stream.online', 'stream.offline']) {
+      try {
+        const res = await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
+          method: 'POST',
+          headers: {
+            'Authorization': this.authHeader,
+            'Client-Id': this.clientId,
+            'Content-Type': 'application/json'
           },
-          'transport': {
-            'method': 'webhook',
-            'callback': process.env.TWITCH_WEBHOOK_CALLBACK_URL,
-            'secret': process.env.TWITCH_SESSION_SECRET
-          }
-        })
-      });
+          body: JSON.stringify({
+            'type': type,
+            'version': '1',
+            'condition': {
+              'broadcaster_user_id': broadcasterId
+            },
+            'transport': {
+              'method': 'webhook',
+              'callback': process.env.TWITCH_WEBHOOK_CALLBACK_URL,
+              'secret': process.env.TWITCH_SESSION_SECRET
+            }
+          })
+        });
 
-      if (!res.ok) {
-        const message = `An error has occured: ${res.status}`;
-        console.log('Error', await res.json())
-        throw new Error(message);
+        if (!res.ok) {
+          const message = `An error has occured: ${res.status}`;
+          console.log('Error', await res.json())
+          throw new Error(message);
+        }
+      } catch (error) {
+        console.log(error)
       }
-      
-      const data = (await res.json()).data;
-      return data;
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -131,7 +130,7 @@ class TwitchAPI {
           'Client-Id': this.clientId,
         }
       });
-  
+
       if (!res.ok) {
         const message = `An error has occured: ${res.status}`;
         console.log('Error', await res.json())
@@ -143,17 +142,17 @@ class TwitchAPI {
       console.log(error)
     }
   }
-  
+
   async getBroadcasterId(username) {
     await this.setToken();
-    try {      
+    try {
       const res = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
           'Authorization': this.authHeader,
           'Client-Id': this.clientId,
         }
       });
-  
+
       if (!res.ok) {
         const message = `An error has occured: ${res.status}`;
         console.log('Error', await res.json())
