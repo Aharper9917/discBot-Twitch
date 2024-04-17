@@ -1,7 +1,7 @@
+require('@discord-bot/utils/deploy-commands')
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-
 
 class DiscordBot {
   client;
@@ -49,7 +49,6 @@ class DiscordBot {
       }
     }
   
-    require('@discord-bot/utils/deploy-commands')
     client.login(process.env.DISCORD_TOKEN);
     return client
   }
