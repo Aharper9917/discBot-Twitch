@@ -47,7 +47,7 @@ const addNotification = async (interaction) => {
     const discordUserId = interaction.options.getUser('user').id
     
     // Validate record doesn't already exist
-    if (await Notification.findOne({ where: { twitchUrl } }) !== null) {
+    if (await Notification.findOne({ where: { twitchUrl, guildId: interaction.guild.id } }) !== null) {
       throw new BotError(`Twitch Live Notification [${twitchUsername}](${twitchUrl}) already exists`)
     }
 

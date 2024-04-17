@@ -33,7 +33,8 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     if (process.env.DISCORD_GUILDID !== undefined) {
       console.log(`Started refreshing ${commands.length} application (/) commands.`);
       data = await rest.put(
-        Routes.applicationGuildCommands(process.env.DISCORD_CLIENTID, process.env.DISCORD_GUILDID),
+        // Routes.applicationGuildCommands(process.env.DISCORD_CLIENTID, process.env.DISCORD_GUILDID),
+        Routes.applicationCommands(process.env.DISCORD_CLIENTID),
         { body: commands },
       );
       console.log(`Successfully reloaded ${data.length} application (/) commands.`);
