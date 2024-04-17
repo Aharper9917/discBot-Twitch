@@ -66,7 +66,7 @@ app.post('/eventsub', (req, res) => {
         }
         */
         discordBot.client.liveEvent = notification.event
-        discordBot?.emit('twitch-live-notification', discordBot.client);
+        discordBot.client?.emit('twitch-live-notification', discordBot.client);
 
         console.log(`EventSub - EventType: ${notification.subscription.type}`);
         console.log('EventSub - ' + JSON.stringify(notification.event, null, 4));
