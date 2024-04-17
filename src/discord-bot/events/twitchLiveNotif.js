@@ -10,13 +10,18 @@ const Guild = require('@db/models/guild')
 const Notification = require('@db/models/notification')
 
 const execute = async (client) => {
-  const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: client.guilds.id } })
-  const dbNotif = await Notification.findOne({ where: {
-    guildId: client.guild.id,
-    twitchUsername: client.liveEvent.broadcaster_user_login
+  const dbNotifs = await Notification.findAll({ where: {
+    twitchUsername: client.liveEvent.broadcaster_user_name
   }})
 
-  client.channels.cache.get(dbGuild.notificationChannelId).send(`<@everyone> [${dbNotif.twitchUsername}](${dbNotif.twitchUrl}) just went live on Twitch!\n\n`);
+  for (const notif of dbNotifs) {
+    const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: notif.guildId } })
+  
+    client.channels.cache.get(dbGuild.notificationChannelId).send(
+      `## @everyone <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
+    );
+  }
+
 }
 
 module.exports = {

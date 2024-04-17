@@ -13,7 +13,7 @@ class DiscordBot {
   start() {
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
     client.cooldowns = new Collection();
-  
+
     // COMMANDS
     client.commands = new Collection();
     const foldersPath = path.join(__dirname, 'commands');
