@@ -15,7 +15,7 @@ const MESSAGE_TYPE_REVOCATION = 'revocation';
 const HMAC_PREFIX = 'sha256=';
 
 const getSecret = () => {
-  return process.env.TWITCH_CLIENTID;
+  return process.env.TWITCH_SESSION_SECRET;
 }
 
 // Build the message used to get the HMAC.
