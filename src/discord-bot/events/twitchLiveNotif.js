@@ -11,16 +11,10 @@ const Notification = require('@db/models/notification')
 
 const execute = async (client) => {
   try {
-    console.log('CLIENT', client)
-    console.log('client.liveEvent', client.liveEvent)
-    const dbNotifs = await Notification.findAll({ where: {
-      twitchUsername: client.liveEvent.broadcaster_user_login
-    }})
+    const dbNotifs = await Notification.findAll({ where: { twitchUsername: client.liveEvent.broadcaster_user_login }})
   
     for (const notif of dbNotifs) {
       const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: notif.guildId } })
-      console.log('notif', notif)
-      console.log('dbGuild', dbGuild)
       
       client.channels.cache.get(dbGuild.notificationChannelId).send(
         `## <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
