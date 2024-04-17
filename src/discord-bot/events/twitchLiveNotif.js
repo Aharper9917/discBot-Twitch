@@ -14,7 +14,7 @@ const execute = async (client) => {
     console.log('CLIENT', client)
     console.log('client.liveEvent', client.liveEvent)
     const dbNotifs = await Notification.findAll({ where: {
-      twitchUsername: client.liveEvent.broadcaster_user_name
+      twitchUsername: client.liveEvent.broadcaster_user_login
     }})
   
     for (const notif of dbNotifs) {
