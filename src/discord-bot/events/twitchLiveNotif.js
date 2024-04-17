@@ -18,7 +18,7 @@ const execute = async (client) => {
     const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: notif.guildId } })
   
     client.channels.cache.get(dbGuild.notificationChannelId).send(
-      `## @everyone <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
+      `## <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
     );
   }
 
