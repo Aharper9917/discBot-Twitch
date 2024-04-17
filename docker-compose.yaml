@@ -15,6 +15,7 @@ services:
       - TWITCH_CLIENTID
       - TWITCH_SESSION_SECRET
       - TWITCH_CALLBACK_URL
+      - TWITCH_WEBHOOK_CALLBACK_URL
     volumes:
       - discord-twitch-bot-prod:/usr/src/bot/data
 volumes:
