@@ -6,6 +6,7 @@
   "type": "live",
   "started_at": "2020-10-11T10:11:12.123Z"
 } */
+const Guild = require('@db/models/guild')
 const Notification = require('@db/models/notification')
 const { GuildScheduledEventManager, GuildScheduledEventPrivacyLevel, GuildScheduledEventEntityType, GuildScheduledEventStatus } = require('discord.js');
 
@@ -14,10 +15,11 @@ const execute = async (client) => {
   console.log('stream.online', client.liveEvent)
   try {
     const dbNotifs = await Notification.findAll({ where: { twitchUsername: client.liveEvent.broadcaster_user_login } })
-
+    
     for (const notif of dbNotifs) {
       if (!notif.active) break;
       try {
+        const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: notif.guildId } })
         const guild = client.guilds.cache.get(notif.guildId);
         const event_manager = new GuildScheduledEventManager(guild);
 
@@ -39,7 +41,7 @@ const execute = async (client) => {
           `## <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
         );
       } catch (error) {
-        console.log(`GuildID: ${notif.guildId}`, error.rawError)
+        console.log(`Error in GuildID: ${notif.guildId}\n`, error)
       }
     }
   } catch (error) {
