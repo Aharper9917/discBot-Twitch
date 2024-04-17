@@ -15,7 +15,7 @@ const { TwitchAPI } = require('@twitch-api')
 const twitch = new TwitchAPI()
 
 const data = new SlashCommandBuilder()
-  .setName('notification')
+  .setName('twitch-alert')
   .setDescription(`Modify what Twitch users you'll get live notifications for.`)
   // .addSubcommand(subcommand =>
 	// 	subcommand
@@ -31,8 +31,8 @@ const data = new SlashCommandBuilder()
     )
   .addSubcommand(subcommand => 
     subcommand
-      .setName('view')
-      .setDescription('Modify a live notifications.')
+      .setName('list')
+      .setDescription('List and modify a live notifications.')
     )
 
 const addNotification = async (interaction) => {
@@ -177,7 +177,7 @@ const execute = async (interaction) => {
     case 'add':
       await addNotification(interaction)
       break;
-    case 'view':
+    case 'list':
       await modifyNotification(interaction)
       break;
       
