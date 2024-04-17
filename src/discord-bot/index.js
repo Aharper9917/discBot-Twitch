@@ -6,11 +6,12 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 
 class DiscordBot {
   client;
-  constructor() {}
+  constructor() {
+    this.client = this.start()
+  }
 
   start() {
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-    this.client = client
     client.cooldowns = new Collection();
   
     // COMMANDS
@@ -50,6 +51,7 @@ class DiscordBot {
     }
   
     client.login(process.env.DISCORD_TOKEN);
+    return client
   }
 
 }

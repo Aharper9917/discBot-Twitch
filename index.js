@@ -13,13 +13,7 @@ const initTwitchApi = async () => {
 
 // ==================================== Discord Bot ====================================
 const { DiscordBot } = require('@discord-bot')
-const discordBot = (async () => {
-  await initTwitchApi()
-  bot = new DiscordBot()
-  bot.start()
-
-  return bot;
-})()
+const discordBot = new DiscordBot()
 
 // ==================================== EVENT SUB ====================================
 const {
