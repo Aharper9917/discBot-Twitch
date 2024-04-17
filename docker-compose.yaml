@@ -7,7 +7,7 @@ services:
     env_file:
       - path: ./.env.production
         required: true
-    port:
+    ports:
       - 8080:8080
     environment:
       - NODE_ENV
