@@ -14,11 +14,13 @@ const execute = async (client) => {
     const dbNotifs = await Notification.findAll({ where: { twitchUsername: client.liveEvent.broadcaster_user_login }})
   
     for (const notif of dbNotifs) {
-      const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: notif.guildId } })
-      
-      client.channels.cache.get(dbGuild.notificationChannelId).send(
-        `## <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
-      );
+      if (notif.active) {
+        const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: notif.guildId } })
+        
+        client.channels.cache.get(dbGuild.notificationChannelId).send(
+          `## <@${notif.discordUserId}> just went live on Twitch!\n${notif.twitchUrl}`
+        );
+      }
     }
   } catch (error) {
     console.log(error)    

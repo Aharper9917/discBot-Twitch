@@ -151,7 +151,7 @@ const modifyNotification = async (interaction) => {
       // Update DB
       if (confirmation.customId === 'delete-btn') {
         // Unsubscribe from EventSub
-        await twitch.unsubscribe(dbNotif.twitchUsername)
+        // await twitch.unsubscribe(dbNotif.twitchUsername)
 
         await dbNotif.destroy();
       } else if (confirmation.customId === 'toggle-btn') {        
