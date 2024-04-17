@@ -74,6 +74,7 @@ app.post('/eventsub', (req, res) => {
             res.sendStatus(204);
         }
         else if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
+            console.log(`EventSub - MESSAGE_TYPE_VERIFICATION`)
             res.set('Content-Type', 'text/plain').status(200).send(notification.challenge);
         }
         else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
