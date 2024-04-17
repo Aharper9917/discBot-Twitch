@@ -57,6 +57,7 @@ app.use(express.raw({
 }))
 
 app.post('/eventsub', (req, res) => {
+  console.log('EventSub Request Recieved:', req)
   try {
     let secret = getSecret();
     let message = getHmacMessage(req);
