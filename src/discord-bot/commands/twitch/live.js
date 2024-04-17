@@ -11,6 +11,7 @@ const execute = async (interaction) => {
 }
 
 module.exports = {
+  disabled: true,
   cooldown: 5,
 	data,
 	execute,
