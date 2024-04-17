@@ -7,6 +7,8 @@ services:
     env_file:
       - path: ./.env.production
         required: true
+    port:
+      - 8080:8080
     environment:
       - NODE_ENV
       - DISCORD_TOKEN
