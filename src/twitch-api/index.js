@@ -66,7 +66,7 @@ class TwitchAPI {
           },
           'transport': {
             'method': 'webhook',
-            'callback': 'https://this-is-a-callback.com',
+            'callback': process.env.TWITCH_WEBHOOK_CALLBACK_URL,
             'secret': process.env.TWITCH_SESSION_SECRET
           }
         })
