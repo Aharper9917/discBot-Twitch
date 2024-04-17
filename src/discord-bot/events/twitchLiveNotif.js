@@ -10,7 +10,7 @@ const Guild = require('@db/models/guild')
 const Notification = require('@db/models/notification')
 
 const execute = async (client) => {
-  const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: clients.guild.id } })
+  const [ dbGuild, dbCreated ] = await Guild.findOrCreate({ where: { id: client.guilds.id } })
   const dbNotif = await Notification.findOne({ where: {
     guildId: client.guild.id,
     twitchUsername: client.liveEvent.broadcaster_user_login
