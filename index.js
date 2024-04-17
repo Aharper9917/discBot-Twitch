@@ -15,7 +15,7 @@ const initTwitchApi = async () => {
   // await twitchApi.subscribe('theprimeagen')
   // await twitchApi.unsubscribe('supnexus11')
   // await twitchApi.unsubscribe('theprimeagen')
-  
+
   return twitchApi
 }
 
@@ -53,46 +53,49 @@ app.listen(port, () => {
 })
 
 app.use(express.raw({
-    type: 'application/json'
-}))  
+  type: 'application/json'
+}))
 
 app.post('/eventsub', (req, res) => {
+  try {
     let secret = getSecret();
     let message = getHmacMessage(req);
     let hmac = HMAC_PREFIX + getHmac(secret, message);  // Signature to compare
-
     if (true === verifyMessage(hmac, req.headers[TWITCH_MESSAGE_SIGNATURE])) {
-        console.log("EventSub - Signatures Match");
-        let notification = JSON.parse(req.body);
-        
-        if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
-            // TODO: Do something with the event's data.
+      console.log("EventSub - Signatures Match");
+      let notification = JSON.parse(req.body);
 
-            console.log(`EventSub - EventType: ${notification.subscription.type}`);
-            console.log('EventSub - ' + JSON.stringify(notification.event, null, 4));
-            
-            res.sendStatus(204);
-        }
-        else if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
-            console.log(`EventSub - MESSAGE_TYPE_VERIFICATION`)
-            res.set('Content-Type', 'text/plain').status(200).send(notification.challenge);
-        }
-        else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
-            res.sendStatus(204);
+      if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
+        // TODO: Do something with the event's data.
 
-            console.log(`EventSub - ${notification.subscription.type} notifications revoked!`);
-            console.log(`EventSub - Reason: ${notification.subscription.status}`);
-            console.log(`EventSub - Condition: ${JSON.stringify(notification.subscription.condition, null, 4)}`);
-        }
-        else {
-            res.sendStatus(204);
-            console.log(`EventSub - Unknown Message Type: ${req.headers[MESSAGE_TYPE]}`);
-        }
+        console.log(`EventSub - EventType: ${notification.subscription.type}`);
+        console.log('EventSub - ' + JSON.stringify(notification.event, null, 4));
+
+        res.sendStatus(204);
+      }
+      else if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
+        console.log(`EventSub - MESSAGE_TYPE_VERIFICATION`)
+        res.set('Content-Type', 'text/plain').status(200).send(notification.challenge);
+      }
+      else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
+        res.sendStatus(204);
+
+        console.log(`EventSub - ${notification.subscription.type} notifications revoked!`);
+        console.log(`EventSub - Reason: ${notification.subscription.status}`);
+        console.log(`EventSub - Condition: ${JSON.stringify(notification.subscription.condition, null, 4)}`);
+      }
+      else {
+        res.sendStatus(204);
+        console.log(`EventSub - Unknown Message Type: ${req.headers[MESSAGE_TYPE]}`);
+      }
     }
     else { // Signatures didn't match.
-        console.log('EventSub - 403');
-        res.sendStatus(403);
+      console.log('EventSub - 403');
+      res.sendStatus(403);
     }
+  } catch (error) {
+    console.log(`EventSub - `, error)
+  }
 })
 
 
