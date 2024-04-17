@@ -41,7 +41,7 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     }
     else {
       console.log(`Started refreshing ${commands.length} global application (/) commands.`);
-      data = await rest.put(Routes.applicationCommand(process.env.DISCORD_CLIENTID), { body: commands });
+      data = await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENTID), { body: commands });
       console.log(`Successfully reloaded ${data.length} global application (/) commands.`);
     }
     
