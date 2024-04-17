@@ -14,4 +14,4 @@ RUN npm run db:sync:force
 # RUN node syncdb.js
 
 # Start the bot.
-CMD ["node", "index.js"]
+CMD ["node", "syncdb.js force", "index.js"]
