@@ -8,25 +8,18 @@ require('@db/relations')
 const { TwitchAPI } = require('@twitch-api')
 const initTwitchApi = async () => {
   const twitchApi = new TwitchAPI(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET)
-  // await twitchApi.setToken()
-
-  // Test API calls
-  // await twitchApi.subscribe('supnexus11')
-  // await twitchApi.subscribe('theprimeagen')
-  // await twitchApi.unsubscribe('supnexus11')
-  // await twitchApi.unsubscribe('theprimeagen')
-
   return twitchApi
 }
 
 // ==================================== Discord Bot ====================================
 const { DiscordBot } = require('@discord-bot')
-
-const StartDiscordBot = async () => {
+const discordBot = (async () => {
   await initTwitchApi()
-  const bot = new DiscordBot()
+  bot = new DiscordBot()
   bot.start()
-}
+
+  return bot;
+})()
 
 // ==================================== EVENT SUB ====================================
 const {
@@ -49,7 +42,6 @@ const port = 8080;
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
-  StartDiscordBot()
 })
 
 app.use(express.raw({
@@ -69,6 +61,18 @@ app.post('/eventsub', (req, res) => {
 
       if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
         // TODO: Do something with the event's data.
+        /*
+        {
+          "id": "50897254045",
+          "broadcaster_user_id": "105252332",
+          "broadcaster_user_login": "slaysol",
+          "broadcaster_user_name": "Slaysol",
+          "type": "live",
+          "started_at": "2024-04-17T03:24:58Z"
+        }
+        */
+        discordBot.client.liveEvent = notification.event
+        discordBot?.emit('twitch-live-notification', discordBot.client);
 
         console.log(`EventSub - EventType: ${notification.subscription.type}`);
         console.log('EventSub - ' + JSON.stringify(notification.event, null, 4));
