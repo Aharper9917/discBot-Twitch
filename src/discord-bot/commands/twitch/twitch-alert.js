@@ -82,7 +82,7 @@ const modifyNotification = async (interaction) => {
     let selection
     
     if (dbNotifs.length === 0) {
-      resContent.content = resContent.content + "### There are no Twitch Live Notifications.\nUse: `/notification add`"
+      resContent.content = resContent.content + "### There are no Twitch Live Notifications.\nUse: `/twitch-alert add`"
     }
     else {
       resContent.content = resContent.content + "### Twitch Live Notifications:\n"
