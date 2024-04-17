@@ -9,7 +9,7 @@ const data = new SlashCommandBuilder()
     .setDescription('The channel you want to get notified in.')
     .addChannelTypes(ChannelType.GuildText)
   )
-  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+  // .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
   .setDMPermission(false)
 
 const execute = async (interaction) => {
