@@ -31,3 +31,4 @@ List containers:\
 
 ## Github Actions: CI/CD
 This project uses Github Actions to build the Docker image. Then using a Github Runner the image get pushed to my homelab server.
+[![Docker Runner](https://github.com/Aharper9917/discBot-Twitch/actions/workflows/runner.yml/badge.svg)](https://github.com/Aharper9917/discBot-Twitch/actions/workflows/runner.yml)
