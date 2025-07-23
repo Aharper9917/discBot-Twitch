@@ -15,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sequelize/mariadb": "^7.0.0-alpha.46",
+    "@sequelize/sqlite3": "^7.0.0-alpha.46",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
