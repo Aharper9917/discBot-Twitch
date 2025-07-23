@@ -9,7 +9,7 @@ RUN touch .env
 RUN npm install
 
 COPY . /usr/src/bot
-RUN npm run db:sync:force
+# RUN npm run db:sync:force
 # RUN npm run db:sync
 # RUN node syncdb.js
 
