@@ -7,6 +7,17 @@ const Sequelize = require("sequelize");
 //   logging: false,
 // });
 
+
+
+
+
+console.log(process.env.DATABASE)
+console.log(process.env.DB_USER)
+console.log(process.env.DB_HOST)
+console.log(process.env.DB_PORT)
+
+
+
 const db = new Sequelize(
   process.env.DATABASE,
   process.env.DB_USER,
@@ -17,16 +28,5 @@ const db = new Sequelize(
     dialect: "mariadb",
   }
 );
-
-async function testConnection() {
-  try {
-    await db.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
-}
-
-testConnection();
 
 module.exports = db;
