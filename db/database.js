@@ -7,17 +7,19 @@ const Sequelize = require("sequelize");
 //   logging: false,
 // });
 
-const db = new Sequelize("database", "username", "password", {
-  dialect: "mariadb",
-  dialectOptions: {
-    database: process.env.DATABASE,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
+const db = new Sequelize(
+  process.env.DATABASE,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    dialect: "mariadb",
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    showWarnings: true,
-    connectTimeout: 1000,
-  },
-});
+    dialectOptions: {
+      showWarnings: true,
+      connectTimeout: 1000, // Timeout in milliseconds
+    },
+  }
+);
 
 module.exports = db;
