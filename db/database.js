@@ -14,17 +14,17 @@ const db = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: process.env.DATABASE_TYPE,
+    dialect: "mariadb",
   }
 );
 
 async function testConnection() {
-    try {
-        await db.authenticate();
-        console.log('Connection has been established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
+  try {
+    await db.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
 }
 
 testConnection();
