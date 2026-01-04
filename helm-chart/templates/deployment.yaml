@@ -14,6 +14,11 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -25,9 +30,24 @@ spec:
         env:
         - name: NODE_ENV
           value: {{ .Values.env.NODE_ENV | quote }}
+        - name: NODE_OPTIONS
+          value: "--dns-result-order=ipv4first"
         envFrom:
         - secretRef:
             name: {{ .Chart.Name }}-secret
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
         {{- if .Values.persistence.enabled }}
         volumeMounts:
         - name: data
