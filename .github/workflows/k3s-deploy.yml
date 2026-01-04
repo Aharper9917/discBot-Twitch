@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check for pending Helm operations
+        run: |
+          # Check if there's a pending operation and rollback if needed
+          if helm status discbot-twitch 2>&1 | grep -q "pending"; then
+            echo "Found pending operation, rolling back..."
+            helm rollback discbot-twitch 0 || true
+          fi
+
       - name: Deploy with Helm
         run: |
           helm upgrade --install discbot-twitch ./helm-chart \
@@ -36,7 +44,8 @@ jobs:
             --set env.DB_PASS="${{ secrets.DB_PASS }}" \
             --set env.DB_HOST="${{ secrets.DB_HOST }}" \
             --set env.DB_PORT="${{ secrets.DB_PORT }}" \
-            --wait \
+            --atomic \
+            --cleanup-on-fail \
             --timeout 3m
 
           echo "Deployment complete. Checking status..."
