@@ -25,32 +25,9 @@ spec:
         env:
         - name: NODE_ENV
           value: {{ .Values.env.NODE_ENV | quote }}
-        - name: DISCORD_TOKEN
-          value: {{ .Values.env.DISCORD_TOKEN | quote }}
-        - name: DISCORD_CLIENTID
-          value: {{ .Values.env.DISCORD_CLIENTID | quote }}
-        - name: TWITCH_CLIENTSECRET
-          value: {{ .Values.env.TWITCH_CLIENTSECRET | quote }}
-        - name: TWITCH_CLIENTID
-          value: {{ .Values.env.TWITCH_CLIENTID | quote }}
-        - name: TWITCH_SESSION_SECRET
-          value: {{ .Values.env.TWITCH_SESSION_SECRET | quote }}
-        - name: TWITCH_CALLBACK_URL
-          value: {{ .Values.env.TWITCH_CALLBACK_URL | quote }}
-        - name: TWITCH_WEBHOOK_CALLBACK_URL
-          value: {{ .Values.env.TWITCH_WEBHOOK_CALLBACK_URL | quote }}
-        - name: DATABASE_TYPE
-          value: {{ .Values.env.DATABASE_TYPE | quote }}
-        - name: DATABASE
-          value: {{ .Values.env.DATABASE | quote }}
-        - name: DB_USER
-          value: {{ .Values.env.DB_USER | quote }}
-        - name: DB_PASS
-          value: {{ .Values.env.DB_PASS | quote }}
-        - name: DB_HOST
-          value: {{ .Values.env.DB_HOST | quote }}
-        - name: DB_PORT
-          value: {{ .Values.env.DB_PORT | quote }}
+        envFrom:
+        - secretRef:
+            name: {{ .Chart.Name }}-secret
         {{- if .Values.persistence.enabled }}
         volumeMounts:
         - name: data
