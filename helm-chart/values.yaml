@@ -12,7 +12,8 @@ service:
 ingress:
   enabled: false
   className: ""
-  annotations: {}
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-strip-discbot-twitch@kubernetescrd
     # cert-manager.io/cluster-issuer: letsencrypt-prod
     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:

@@ -1,0 +1,12 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-{{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  stripPrefix:
+    prefixes:
+      - /discbot-twitch
+{{- end }}
