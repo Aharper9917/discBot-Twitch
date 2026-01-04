@@ -1,0 +1,45 @@
+name: Deploy to k3s
+
+on:
+  workflow_run:
+    workflows: ["Build and Publish Docker Image"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment: production
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install discbot-twitch ./helm-chart \
+            --set image.repository=ghcr.io/aharper9917/discbot-twitch \
+            --set image.tag=latest \
+            --set env.NODE_ENV=production \
+            --set env.DISCORD_TOKEN="${{ secrets.DISCORD_TOKEN }}" \
+            --set env.DISCORD_CLIENTID="${{ secrets.DISCORD_CLIENTID }}" \
+            --set env.TWITCH_CLIENTSECRET="${{ secrets.TWITCH_CLIENTSECRET }}" \
+            --set env.TWITCH_CLIENTID="${{ secrets.TWITCH_CLIENTID }}" \
+            --set env.TWITCH_SESSION_SECRET="${{ secrets.TWITCH_SESSION_SECRET }}" \
+            --set env.TWITCH_CALLBACK_URL="${{ secrets.TWITCH_CALLBACK_URL }}" \
+            --set env.TWITCH_WEBHOOK_CALLBACK_URL="${{ secrets.TWITCH_WEBHOOK_CALLBACK_URL }}" \
+            --set env.DATABASE_TYPE="${{ secrets.DATABASE_TYPE }}" \
+            --set env.DATABASE="${{ secrets.DATABASE }}" \
+            --set env.DB_USER="${{ secrets.DB_USER }}" \
+            --set env.DB_PASS="${{ secrets.DB_PASS }}" \
+            --set env.DB_HOST="${{ secrets.DB_HOST }}" \
+            --set env.DB_PORT="${{ secrets.DB_PORT }}" \
+            --wait \
+            --timeout 5m
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/discbot-twitch
+          kubectl get pods -l app=discbot-twitch

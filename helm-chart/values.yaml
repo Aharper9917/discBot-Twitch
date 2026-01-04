@@ -1,0 +1,41 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/aharper9917/discbot-twitch
+  pullPolicy: Always
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  mountPath: /usr/src/bot/data
+
+env:
+  NODE_ENV: production
+  DISCORD_TOKEN: ""
+  DISCORD_CLIENTID: ""
+  TWITCH_CLIENTSECRET: ""
+  TWITCH_CLIENTID: ""
+  TWITCH_SESSION_SECRET: ""
+  TWITCH_CALLBACK_URL: ""
+  TWITCH_WEBHOOK_CALLBACK_URL: ""
+  DATABASE_TYPE: ""
+  DATABASE: ""
+  DB_USER: ""
+  DB_PASS: ""
+  DB_HOST: ""
+  DB_PORT: ""

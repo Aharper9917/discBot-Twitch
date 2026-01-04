@@ -1,0 +1,6 @@
+apiVersion: v2
+name: discbot-twitch
+description: A Discord bot integrated with Twitch
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
