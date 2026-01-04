@@ -42,6 +42,10 @@ app.use(express.raw({
   type: 'application/json'
 }))
 
+app.get('/', (req, res) => {
+  res.status(200).send('OK');
+})
+
 app.post('/eventsub', (req, res) => {
   // console.log('EventSub Request Recieved:', req)
   try {

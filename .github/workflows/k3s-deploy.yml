@@ -37,9 +37,7 @@ jobs:
             --set env.DB_HOST="${{ secrets.DB_HOST }}" \
             --set env.DB_PORT="${{ secrets.DB_PORT }}" \
             --wait \
-            --timeout 5m
+            --timeout 3m
 
-      - name: Verify deployment
-        run: |
-          kubectl rollout status deployment/discbot-twitch
+          echo "Deployment complete. Checking status..."
           kubectl get pods -l app=discbot-twitch
