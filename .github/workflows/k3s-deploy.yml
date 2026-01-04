@@ -30,6 +30,11 @@ jobs:
           helm upgrade --install discbot-twitch ./helm-chart \
             --set image.repository=ghcr.io/aharper9917/discbot-twitch \
             --set image.tag=latest \
+            --set ingress.enabled=true \
+            --set ingress.className=traefik \
+            --set ingress.hosts[0].host="${{ secrets.INGRESS_HOST }}" \
+            --set ingress.hosts[0].paths[0].path=/discbot-twitch \
+            --set ingress.hosts[0].paths[0].pathType=Prefix \
             --set env.NODE_ENV=production \
             --set env.DISCORD_TOKEN="${{ secrets.DISCORD_TOKEN }}" \
             --set env.DISCORD_CLIENTID="${{ secrets.DISCORD_CLIENTID }}" \
