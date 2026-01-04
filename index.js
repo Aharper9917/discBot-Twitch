@@ -46,7 +46,8 @@ app.get('/', (req, res) => {
   res.status(200).send('OK');
 })
 
-app.post('/eventsub', (req, res) => {
+// EventSub handler function
+const handleEventSub = (req, res) => {
   // console.log('EventSub Request Recieved:', req)
   try {
     let secret = getSecret();
@@ -94,6 +95,10 @@ app.post('/eventsub', (req, res) => {
   } catch (error) {
     console.log(`EventSub - `, error)
   }
-})
+}
+
+// Handle both /eventsub and /discbot-twitch/eventsub paths
+app.post('/eventsub', handleEventSub)
+app.post('/discbot-twitch/eventsub', handleEventSub)
 
 
