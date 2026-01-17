@@ -1,4 +1,3 @@
-process.env.DISCORD_GUILDID === undefined ? require('@discord-bot/utils/deploy-commands') : null
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
