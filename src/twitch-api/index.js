@@ -193,6 +193,32 @@ class TwitchAPI {
       console.log(error)
     }
   }
+
+  async getUserInfo(username) {
+    await this.setToken();
+    const res = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
+      headers: {
+        'Authorization': this.authHeader,
+        'Client-Id': this.clientId,
+      }
+    });
+    if (!res.ok) throw new Error(`Error: ${res.status}`);
+    return (await res.json()).data[0] || null;
+  }
+
+  async getSchedule(broadcasterId) {
+    await this.setToken();
+    const res = await fetch(`https://api.twitch.tv/helix/schedule?broadcaster_id=${broadcasterId}&first=5`, {
+      headers: {
+        'Authorization': this.authHeader,
+        'Client-Id': this.clientId,
+      }
+    });
+    if (res.status === 404) return { segments: [], vacation: null, hasSchedule: false };
+    if (!res.ok) throw new Error(`Error: ${res.status}`);
+    const data = await res.json();
+    return { segments: data.data?.segments || [], vacation: data.data?.vacation, hasSchedule: true };
+  }
 }
 
 module.exports = { TwitchAPI }
