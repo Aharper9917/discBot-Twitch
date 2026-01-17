@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { isValidTwitchUrl, getTwitchUsernameFromUrl } = require('@discord-bot/utils/url');
 const { BotError } = require('@errors/BotError');
 const { TwitchAPI } = require('@twitch-api');
+const Notification = require('@db/models/notification');
 
 const twitch = new TwitchAPI();
 
@@ -13,7 +14,20 @@ const data = new SlashCommandBuilder()
       .setName('streamer')
       .setDescription('Twitch username or URL')
       .setRequired(true)
+      .setAutocomplete(true)
   );
+
+const autocomplete = async (interaction) => {
+  const focusedValue = interaction.options.getFocused().toLowerCase();
+  const notifications = await Notification.findAll({ where: { guildId: interaction.guild.id } });
+
+  const choices = notifications
+    .map(n => ({ name: n.twitchUsername, value: n.twitchUsername }))
+    .filter(c => c.name.toLowerCase().includes(focusedValue))
+    .slice(0, 25);
+
+  await interaction.respond(choices);
+};
 
 const execute = async (interaction) => {
   try {
@@ -100,5 +114,6 @@ const execute = async (interaction) => {
 module.exports = {
   cooldown: 5,
   data,
-  execute
+  execute,
+  autocomplete
 };
