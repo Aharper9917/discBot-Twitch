@@ -1,6 +1,6 @@
 {
   "name": "discbot-twitch",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Discord Bot to notify a server when a Twitch user goes live",
   "main": "index.js",
   "scripts": {
