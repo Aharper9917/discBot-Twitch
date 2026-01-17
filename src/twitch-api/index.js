@@ -171,6 +171,28 @@ class TwitchAPI {
       console.log(error)
     }
   }
+
+  async getStreamInfo(broadcasterId) {
+    await this.setToken();
+    try {
+      const res = await fetch(`https://api.twitch.tv/helix/streams?user_id=${broadcasterId}`, {
+        headers: {
+          'Authorization': this.authHeader,
+          'Client-Id': this.clientId,
+        }
+      });
+
+      if (!res.ok) {
+        const message = `An error has occured: ${res.status}`;
+        console.log('Error', await res.json())
+        throw new Error(message);
+      }
+      const streamData = (await res.json()).data[0];
+      return streamData; // Contains: title, game_name, game_id, viewer_count, etc.
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = { TwitchAPI }
